@@ -1,0 +1,33 @@
+﻿@page "/form1"
+
+<h3>Primeiro Formulário Blazor</h3>
+
+<EditForm Model="@user">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label form="nome">Nome</label>
+        <InputText id="nome" @bind-Value="@user.Nome" class="form-control"/>
+        <ValidationMessage For="() => user.Nome" />
+    </div>
+
+    <div class="form-group">
+        <label form="email">Email</label>
+        <InputText id="email" @bind-Value="@user.Email" class="form-control" />
+        <ValidationMessage For="@(() => user.Email)" />
+    </div>
+
+    <div class="form-group">
+        <label form="idade">Idade</label>
+        <InputNumber id="idade" @bind-Value="@user.Idade" class="form-control" />
+        <ValidationMessage For="@(() => user.Idade)" />
+    </div>
+    <input type="submit" value="Enviar Formulário" class="btn-primary" />
+    
+</EditForm>
+
+@code {
+    Usuario user = new();
+}

@@ -1,0 +1,12 @@
+﻿<h1>Pergunta</h1>
+<div style="background-color:@CorFundo;">
+    <h1 style="font-size:@TamanhoFonte;">Qual o significado da vida?</h1>
+    <hr />
+    <h1>@Valor</h1>
+</div>
+
+@code {
+    [CascadingParameter] string Valor { get; set; }
+    [CascadingParameter(Name = "CorFundo")] string CorFundo { get; set; }
+    [CascadingParameter(Name = "TamanhoFonte")] string TamanhoFonte { get; set; }
+}

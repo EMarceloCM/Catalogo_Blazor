@@ -1,0 +1,24 @@
+﻿@page "/"
+@* @inject HttpClient http *@
+@inject IRepository repositorio
+
+<Tarefas tarefas="GetTarefas()" Titulo="Lista de Tarefas"/>
+
+@code{
+
+    List<Tarefa> tarefas = new List<Tarefa>();
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     tarefas = await http.GetFromJsonAsync<List<Tarefa>>("dados/tarefas.json");
+    // }
+
+    protected override void OnInitialized()
+    {
+        tarefas = repositorio.ObterTarefa();
+    }
+
+    private List<Tarefa> GetTarefas()
+    {
+        return tarefas;
+    }
+}

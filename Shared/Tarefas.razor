@@ -1,0 +1,97 @@
+﻿@inject IJSRuntime js
+
+<Confirm @ref="confirmacao" onCancel="CancelaConfirm" onConfirm="RemoverTarefa" Titulo="Confirme">
+    <ChildContent>
+        <div>Deseja excluir esta tarefa ?</div>
+    </ChildContent>
+</Confirm>
+
+<h1>@Titulo</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ação</th>
+            <th>Data</th>
+            <th>Descrição</th>
+            <th>Concluida</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ListaGenerica ListaItem="tarefas">
+            <Lista>
+                <TarefaIndividual item="context" RemoverTarefa="RemoveTarefa" />
+            </Lista>
+        </ListaGenerica>
+    </tbody>
+</table>
+
+@if (tarefas != null)
+{
+    <div class="form-group">
+        <label>Tarefa</label>
+        <input type="Text" placeholder="Informe a tarefa" @bind="novaTarefa" />
+        <button class="btn btn-primary" @onclick="AdicionarNovaTarefa">Refistrar Tarefa</button>
+    </div>
+}
+
+@code {
+
+    [Parameter] public List<Tarefa> tarefas { get; set; }
+    [Parameter] public string Titulo { get; set; }
+
+    private string novaTarefa = string.Empty;
+
+    Confirm confirmacao;
+    Tarefa Tremove;
+
+    public async Task AdicionarNovaTarefa()
+    {
+        if (!string.IsNullOrWhiteSpace(novaTarefa))
+        {
+            tarefas.Add(new Tarefa
+                {
+                    DataCriacao = DateTime.Now,
+                    Descricao = novaTarefa,
+                    Id = Guid.NewGuid()
+                });
+            novaTarefa = "";
+        }
+        totalTarefas = tarefas.Count;
+        //await js.InvokeVoidAsync("getTotalTarefa");
+        //await js.InvokeAsync<int>("getTotalTarefaInstance", DotNetObjectReference.Create(this));
+    }
+
+    static int totalTarefas = 0;
+
+    void RemoveTarefa(Tarefa tarefa)
+    {
+        confirmacao.Exibir();
+        Tremove = tarefa;
+        //tarefas.Remove(tarefas.First(x => x.Id == tarefa.Id));
+    }
+
+    public void RemoverTarefa()
+    {
+        tarefas.Remove(Tremove!);
+        Tremove = null!;
+        confirmacao.Ocultar();
+    }
+
+    public void CancelaConfirm()
+    {
+        confirmacao.Ocultar();
+        Tremove = null!;
+    }
+
+    [JSInvokable]
+    public static Task<int> ObterTotal()
+    {
+        return Task.FromResult(totalTarefas);
+    }
+    [JSInvokable]
+    public static Task<int> ObterTotalInstancia()
+    {
+        return Task.FromResult(totalTarefas);
+    }
+}
